@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -66,7 +67,11 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('admin.categories.edit', [
+            'category' => $category,
+            'categories' => Category::with('children')->where('parent_id', '0')->get(),
+            'delimiter' => ''
+        ]);
     }
 
     /**
@@ -78,7 +83,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $category->update($request->except('slug'));
+        return redirect()->route('admin.category.index');
     }
 
     /**
